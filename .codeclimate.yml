@@ -1,0 +1,10 @@
+version: "2"
+checks:
+  method-complexity:
+    config:
+      threshold: 15
+exclude_paths:
+  - .yarn/
+  - public/
+  - "**/node_modules/"
+  - "**/build/"
