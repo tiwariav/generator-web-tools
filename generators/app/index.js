@@ -1,15 +1,25 @@
-import Generator from "yeoman-generator";
+import BaseGenerator from "yeoman-generator";
 
-export default class extends Generator {
-  async _copyConfig(name, files, packages = []) {
+export default class Generator extends BaseGenerator {
+  constructor(args, options) {
+    super(args, options);
+    this.answers = {};
+  }
+
+  async _copyConfig(name, files, packages = [], options = {}) {
     const answers = await this.prompt([
       {
-        type: "confirm",
-        name: name,
         message: `${name}?`,
+        name: name,
+        store: true,
+        type: "confirm",
       },
     ]);
-    if (answers[name]) {
+    this.answers = { ...this.answers, ...answers };
+    if (
+      answers[name] ||
+      options.acceptedAnswers?.find((item) => this.answers[item])
+    ) {
       for (const filename of files) {
         this.copyTemplate(filename, filename);
       }
@@ -40,13 +50,13 @@ export default class extends Generator {
       ]
     );
   }
-  async configCodeclimate() {
+  async configEditorconfig() {
     await this._copyConfig("editorconfig", [".editorconfig"]);
   }
   async configEslint() {
     await this._copyConfig(
       "eslint",
-      [".eslintignore", ".eslintrc.js"],
+      [".eslintignore", ".eslintrc.cjs"],
       [
         "eslint",
         "eslint-config-prettier",
@@ -81,6 +91,27 @@ export default class extends Generator {
   async configGitlab() {
     await this._copyConfig("gitlab", [".gitlab-ci.yml"]);
   }
+  async configHusky() {
+    await this._copyConfig("husky", [".husky"], ["husky"], {
+      acceptedAnswers: ["commitlint", "lintstaged"],
+    });
+  }
+  async configJest() {
+    await this._copyConfig(
+      "jest",
+      ["jest.config.cjs"],
+      [
+        "@testing-library/jest-dom",
+        "babel-jest",
+        "jest",
+        "jest-environment-jsdom",
+        "jest-html-reporter",
+        "jest-html-reporters",
+        "jest-junit",
+        "ts-jest",
+      ]
+    );
+  }
   async configLintstaged() {
     await this._copyConfig(
       "lintstaged",
@@ -90,6 +121,28 @@ export default class extends Generator {
   }
   async configPrettier() {
     await this._copyConfig("prettier", [".prettierignore"], ["prettier"]);
+  }
+  async configStorybook() {
+    await this._copyConfig(
+      "storybook",
+      [".storybook"],
+      [
+        "@storybook/addon-actions",
+        "@storybook/addon-docs",
+        "@storybook/addon-essentials",
+        "@storybook/addon-interactions",
+        "@storybook/addon-jest",
+        "@storybook/addon-links",
+        "@storybook/addon-postcss",
+        "@storybook/addon-toolbars",
+        "@storybook/builder-webpack5",
+        "@storybook/manager-webpack5",
+        "@storybook/mdx2-csf",
+        "@storybook/react",
+        "@storybook/testing-library",
+        "wo-library",
+      ]
+    );
   }
   async configStylelint() {
     await this._copyConfig(
@@ -105,22 +158,6 @@ export default class extends Generator {
         "stylelint-declaration-block-no-ignored-properties",
         "stylelint-declaration-strict-value",
         "stylelint-use-nesting",
-      ]
-    );
-  }
-  async configJest() {
-    await this._copyConfig(
-      "jest",
-      ["jest.config.cjs"],
-      [
-        "@testing-library/jest-dom",
-        "babel-jest",
-        "jest",
-        "jest-environment-jsdom",
-        "jest-html-reporter",
-        "jest-html-reporters",
-        "jest-junit",
-        "ts-jest",
       ]
     );
   }
