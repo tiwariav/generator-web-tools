@@ -1,7 +1,17 @@
 {
   "name": "generator-web-tools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Add and configure a collection of tools. Most tools can be used in any kind of projects, but the general emphasis of the conigs is on web development.",
+  "author": {
+    "name": "Arvind Tiwari",
+    "email": "tiwariav@gmail.com",
+    "url": "https://github.com/tiwariav"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tiwariav/generator-web-tools.git"
+  },
+  "license": "MIT",
   "type": "module",
   "files": [
     "generators"
